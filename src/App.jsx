@@ -313,7 +313,7 @@ export function InvitationHome() {
           <SectionTitle eyebrow="Será un gusto recibirte">
             Ceremonia y recepción
           </SectionTitle>
-          <div className="locations-grid">
+         <div className="events-row">
             <LocationCard
               icon="⛪︎"
               title="Ceremonia eucarística"

@@ -956,3 +956,24 @@ button:focus-visible {
     transition-duration: .01ms !important;
   }
 }
+
+.events-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+}
+
+.events-row > * {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* En dispositivos móviles, se mantienen en una fila */
+@media (max-width: 600px) {
+  .events-row {
+    gap: 12px;
+  }
+}
