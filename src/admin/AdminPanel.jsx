@@ -13,19 +13,6 @@ import {
 import * as XLSX from "xlsx";
 import "./AdminPanel.css";
 
-const INITIAL_FAMILIES = [
-  ["Arellano Rayón", 4],
-  ["Luján Velázquez", 5],
-  ["Dulce", 10],
-  ["Freya", 30],
-  ["Rodríguez", 4],
-  ["Arenas", 5],
-  ["Velázquez", 5],
-  ["Romi", 10],
-  ["Pérez", 4],
-  ["Banco", 10],
-];
-
 export default function AdminPanel() {
   const [user, setUser] = useState(auth.currentUser);
   const [email, setEmail] = useState("");
@@ -100,6 +87,18 @@ export default function AdminPanel() {
       await refresh();
     } catch (e) {
       setError(e.message || "No se pudo actualizar el estado.");
+    }
+  }
+
+  async function copyLink(url) {
+    if (!url) return;
+
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      setError(
+        "No se pudo copiar el enlace. Selecciónalo manualmente desde la tabla.",
+      );
     }
   }
 
@@ -250,7 +249,7 @@ export default function AdminPanel() {
               value={newLink}
               onFocus={(e) => e.target.select()}
             />
-            <button onClick={() => navigator.clipboard.writeText(newLink)}>
+            <button onClick={() => copyLink(newLink)}>
               Copiar enlace
             </button>
             <p>
@@ -273,6 +272,7 @@ export default function AdminPanel() {
                 <th>Disponibles</th>
                 <th>Visitas</th>
                 <th>Únicas aprox.</th>
+                <th>Enlace</th>
                 <th>Estado</th>
                 <th>Acción</th>
               </tr>
@@ -288,6 +288,30 @@ export default function AdminPanel() {
                   </td>
                   <td>{item.viewCount || 0}</td>
                   <td>{item.uniqueViewCount || 0}</td>
+                  <td className="admin-link-cell">
+                    {item.url ? (
+                      <>
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="admin-link"
+                        >
+                          Abrir
+                        </a>
+                        <button
+                          className="admin-small"
+                          onClick={() => copyLink(item.url)}
+                        >
+                          Copiar
+                        </button>
+                      </>
+                    ) : (
+                      <span className="admin-link-missing">
+                        Creada anteriormente
+                      </span>
+                    )}
+                  </td>
                   <td>{item.active ? "Activa" : "Desactivada"}</td>
                   <td>
                     <button
@@ -302,20 +326,6 @@ export default function AdminPanel() {
             </tbody>
           </table>
         )}
-      </section>
-      <section className="admin-family-seed">
-        <h2>Familias acordadas</h2>
-        <p>
-          Lista de referencia inicial. Puedes crear estas invitaciones
-          individualmente y verificar los cupos antes de compartir los enlaces.
-        </p>
-        <ul>
-          {INITIAL_FAMILIES.map(([name, count]) => (
-            <li key={name}>
-              {name}: {count} boletos
-            </li>
-          ))}
-        </ul>
       </section>
     </main>
   );

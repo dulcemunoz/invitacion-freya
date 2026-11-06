@@ -132,6 +132,7 @@ export async function adminListInvitations() {
       id: d.id,
       familyName: x.familyName,
       maxGuests: x.maxGuests,
+      url: x.url || "",
       confirmedCount: Number(x.confirmedCount || 0),
       viewCount: x.viewCount || 0,
       uniqueViewCount: x.uniqueViewCount || 0,
@@ -163,10 +164,12 @@ export async function adminCreateInvitation(familyName, maxGuests) {
     .join("");
 
   const id = await tokenToId(token);
+  const url = publicUrl(token);
 
   await setDoc(doc(db, "invitations", id), {
     familyName: name,
     maxGuests: count,
+    url,
     confirmedCount: 0,
     viewCount: 0,
     uniqueViewCount: 0,
@@ -182,7 +185,7 @@ export async function adminCreateInvitation(familyName, maxGuests) {
     familyName: name,
     maxGuests: count,
     confirmedCount: 0,
-    url: publicUrl(token),
+    url,
   };
 }
 

@@ -21,9 +21,26 @@
 .admin-table th,.admin-table td{padding:12px;text-align:left;border-bottom:1px solid #eee6f0}
 .admin-table th{color:#756a9b;font-weight:600}
 .admin-small{padding:7px 10px!important}
+.admin-link-cell{display:flex;align-items:center;gap:8px}
+.admin-link{color:#665184;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.admin-link-missing{color:#817487;font-size:12px}
 .admin-error{padding:12px;border-radius:8px;background:#fff0ef;color:#923d3d;font-size:13px}
 .admin-login{width:min(100%,420px);margin:8vh auto;padding:32px;display:grid;gap:18px;border:1px solid #e5dce7;border-radius:20px;background:white;box-shadow:0 15px 50px #43364f12}
 .admin-login h1{margin:0}
 .admin-login button{margin-top:4px}
 .admin-family-seed ul{columns:2;line-height:1.8;font-size:13px}
 @media(max-width:760px){.admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-create form{grid-template-columns:1fr}.admin-family-seed ul{columns:1}}
+
+@media(prefers-color-scheme:dark){
+  .admin-shell{background:#17131c;color:#eadff0}
+  .admin-shell h1,.admin-shell h2{color:#f1e7f4}
+  .admin-kicker,.admin-table th{color:#c9aedb}
+  .admin-stats article,.admin-create,.admin-table-wrap,.admin-login{border-color:#493a52;background:#281f30}
+  .admin-stats span,.admin-new-link p,.admin-link-missing{color:#c5b5cc}
+  .admin-shell input{border-color:#5b4864;background:#211a27;color:#f1e7f4}
+  .admin-new-link{background:#34283d}
+  .admin-table th,.admin-table td{border-bottom-color:#493a52}
+  .admin-link{color:#d7b979}
+  .admin-shell .admin-secondary,.admin-small{background:#493a52;color:#f1e7f4}
+  .admin-error{background:#482a32;color:#ffc5c5}
+}
