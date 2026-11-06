@@ -13,6 +13,14 @@ const CHURCH_URL = "https://share.google/VJlHec0eA0R3uA7Ib";
 
 const RECEPTION_URL = "https://share.google/hwiALi7eAysCPAbKz";
 
+function startInvitationMusic() {
+  const audio = document.getElementById("invitation-music");
+  if (!audio) return;
+  audio.muted = false;
+  audio.volume = 0.6;
+  audio.play().catch(() => {});
+}
+
 // generic invitation
 function Butterfly({ className = "" }) {
   return (
@@ -164,37 +172,45 @@ function Countdown() {
 }
 
 function MusicControl() {
-  const [playing, setPlaying] = useState(false);
-  const toggleMusic = async () => {
+  useEffect(() => {
     const audio = document.getElementById("invitation-music");
     if (!audio) return;
-    if (playing) {
-      audio.pause();
-      setPlaying(false);
-      return;
-    }
-    try {
-      await audio.play();
-      setPlaying(true);
-    } catch {
-      setPlaying(false);
-    }
-  };
+
+    startInvitationMusic();
+    const retryMusic = () => {
+      startInvitationMusic();
+    };
+    document.addEventListener("pointerdown", retryMusic, {
+      once: true,
+      capture: true,
+    });
+    document.addEventListener("touchstart", retryMusic, {
+      once: true,
+      capture: true,
+    });
+    document.addEventListener("keydown", retryMusic, {
+      once: true,
+      capture: true,
+    });
+    document.addEventListener("click", retryMusic, {
+      once: true,
+      capture: true,
+    });
+    return () => {
+      document.removeEventListener("pointerdown", retryMusic, true);
+      document.removeEventListener("touchstart", retryMusic, true);
+      document.removeEventListener("keydown", retryMusic, true);
+      document.removeEventListener("click", retryMusic, true);
+    };
+  }, []);
 
   return (
-    <>
-      <audio id="invitation-music" loop>
-        <source src="/musica-instrumental.mp3" type="audio/mpeg" />
-      </audio>
-      <button
-        className="music-button"
-        onClick={toggleMusic}
-        aria-label={playing ? "Pausar música" : "Reproducir música"}
-      >
-        <span>{playing ? "Ⅱ" : "♫"}</span>
-        {playing ? "Pausar música" : "Escuchar música"}
-      </button>
-    </>
+    <audio id="invitation-music" autoPlay loop preload="auto">
+      <source
+        src={`${import.meta.env.BASE_URL}Laufey_Silver_Lining.mp3`}
+        type="audio/mpeg"
+      />
+    </audio>
   );
 }
 
@@ -271,6 +287,7 @@ export default function PrivateInvitation() {
   const [status, setStatus] = useState("loading");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [showConfirmationAlert, setShowConfirmationAlert] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -332,7 +349,8 @@ export default function PrivateInvitation() {
         responseSubmitted: true,
       }));
 
-      setMessage("¡Gracias! Tu confirmación quedó registrada.");
+      setMessage("");
+      setShowConfirmationAlert(true);
     } catch (error) {
       setMessage(error.message || "No se pudo guardar la confirmación.");
     } finally {
@@ -365,7 +383,7 @@ export default function PrivateInvitation() {
 
   return (
     <>
-      <main className="invitation">
+      <main className="invitation" onPointerDown={startInvitationMusic}>
         <div className="architecture" aria-hidden="true">
           <div className="marble-arch">
             <div className="arch-inner" />
@@ -411,13 +429,17 @@ export default function PrivateInvitation() {
             <MusicControl />
           </header>
           <section className="special-section">
-            <SectionTitle eyebrow="Con cariño, para ti">
+            <SectionTitle eyebrow="">
               Una nueva etapa comienza
             </SectionTitle>
             <p className="intro-copy">
-              Hoy comienza un capítulo maravilloso en mi historia. Acompáñame a
+              {/* Hoy comienza un capítulo maravilloso en mi historia. Acompáñame a
               celebrar mis quince años, rodeada de las personas que hacen mi
-              mundo más bonito. Tu presencia será el detalle más especial.
+              mundo más bonito. Tu presencia será el detalle más especial.  */}
+              Cada momento especial se vuelve aún más hermoso cuando estamos
+              rodeados de quienes apreciamos. Me encantaría que formaras parte
+              de esta celebración y que juntos hagamos de esta noche un recuerdo
+              lleno de felicidad.
             </p>
             <div className="family-grid">
               <div className="family-person">
@@ -545,10 +567,12 @@ export default function PrivateInvitation() {
                 }}
               />
               <p className="mini-rsvp__hint">
-                Indica el número de asistentes de tu familia. Puedes confirmar una cantidad menor al cupo asignado, pero no exceder el máximo permitido.
+                Indica el número de asistentes de tu familia. Puedes confirmar
+                una cantidad menor al cupo asignado, pero no exceder el máximo
+                permitido.
               </p>
               <button
-                className="button button-location"
+                className="button button-location rsvp-submit"
                 type="submit"
                 disabled={saving || responseSubmitted || attendingCount === ""}
               >
@@ -578,6 +602,43 @@ export default function PrivateInvitation() {
           </footer>
         </div>
       </main>
+      {showConfirmationAlert && (
+        <div
+          className="confirmation-alert-backdrop"
+          role="presentation"
+          onClick={() => setShowConfirmationAlert(false)}
+        >
+          <section
+            className="confirmation-alert"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="confirmation-alert-title"
+            aria-describedby="confirmation-alert-message"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="confirmation-alert__ornament" aria-hidden="true">
+              ✧
+            </div>
+            <p className="confirmation-alert__eyebrow">Confirmación recibida</p>
+            <h2 id="confirmation-alert-title">
+              ¡Gracias, familia {invitation.familyName}!
+            </h2>
+            <p id="confirmation-alert-message">
+              Tu registro de {invitation.confirmedCount} invitados quedó
+              guardado correctamente. Para cualquier aclaración, deben
+              identificarse como{" "}
+              <strong>Familia {invitation.familyName}</strong>.
+            </p>
+            <button
+              className="confirmation-alert__button"
+              type="button"
+              onClick={() => setShowConfirmationAlert(false)}
+            >
+              Continuar
+            </button>
+          </section>
+        </div>
+      )}
     </>
   );
 }

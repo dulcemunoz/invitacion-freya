@@ -261,7 +261,7 @@ export function InvitationHome() {
       </div>
       <div className="invitation-content">
         <header className="hero">
-          <p className="hero-eyebrow">Con el corazón lleno de ilusión</p>
+          <p className="hero-eyebrow">Hay momentos que se convierten en recuerdos para toda la vida, y este es uno de ellos.</p>
           <p className="hero-intro">
             Estás cordialmente invitado a celebrar mis
           </p>
@@ -274,9 +274,9 @@ export function InvitationHome() {
             Sábado <strong>28</strong> Noviembre 2026
           </p>
           <p className="hero-caption">
-            Una noche para recordar, un sueño hecho realidad.
+            Hay celebraciones que trascienden el momento y permanecen en el corazón.
           </p>
-          <MusicControl />
+          {/* <MusicControl /> */}
         </header>
         <section className="special-section">
           <SectionTitle eyebrow="Con cariño, para ti">
@@ -419,5 +419,5 @@ export default function App() {
     return <PrivateInvitation />;
   }
 
-  return <InvitationHome />;
+  return <PrivateInvitation />;
 }
