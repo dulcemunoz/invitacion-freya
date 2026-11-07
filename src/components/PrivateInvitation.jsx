@@ -360,7 +360,7 @@ export default function PrivateInvitation() {
 
   if (status === "loading") {
     return (
-      <main className="private-invite">
+      <main className="private-invite" translate="no">
         <section className="private-invite__card">
           <p>Preparando tu invitación…</p>
         </section>
@@ -370,7 +370,7 @@ export default function PrivateInvitation() {
 
   if (status === "error") {
     return (
-      <main className="private-invite">
+      <main className="private-invite" translate="no">
         <section className="private-invite__card">
           <p className="mini-eyebrow">XV años · Freya Marlene</p>
           <h1>Invitación no disponible</h1>
@@ -383,7 +383,11 @@ export default function PrivateInvitation() {
 
   return (
     <>
-      <main className="invitation" onPointerDown={startInvitationMusic}>
+      <main
+        className="invitation"
+        translate="no"
+        onPointerDown={startInvitationMusic}
+      >
         <div className="architecture" aria-hidden="true">
           <div className="marble-arch">
             <div className="arch-inner" />
