@@ -324,7 +324,11 @@ export default function PrivateInvitation() {
     setMessage("");
 
     if (responseSubmitted) {
-      setMessage("Tu familia ya registró su confirmación.");
+      setMessage(
+        invitation.maxGuests === 1
+          ? "Tu confirmación ya fue registrada."
+          : "Tu familia ya registró su confirmación.",
+      );
       return;
     }
 
@@ -381,6 +385,8 @@ export default function PrivateInvitation() {
     );
   }
 
+  const isPersonalInvitation = invitation.maxGuests === 1;
+
   return (
     <>
       <main
@@ -414,9 +420,15 @@ export default function PrivateInvitation() {
         </div>
         <div className="invitation-content">
           <header className="hero">
-            <p className="hero-eyebrow">Familia {invitation.familyName}</p>
+            <p className="hero-eyebrow">
+              {isPersonalInvitation
+                ? invitation.familyName
+                : `Familia ${invitation.familyName}`}
+            </p>
             <p className="hero-intro">
-              Están cordialmente invitados a celebrar mis
+              {isPersonalInvitation
+                ? "Estás cordialmente invitado a celebrar mis"
+                : "Están cordialmente invitados a celebrar mis"}
             </p>
             <h1>XV Años</h1>
             <p className="quince-name">Freya Marlene</p>
@@ -535,16 +547,23 @@ export default function PrivateInvitation() {
           </section>
           <section className="rsvp-section">
             <Butterfly className="rsvp-butterfly" />
-            <SectionTitle eyebrow={`Familia ${invitation?.familyName}`}>
+            <SectionTitle
+              eyebrow={
+                isPersonalInvitation
+                  ? invitation?.familyName
+                  : `Familia ${invitation?.familyName}`
+              }
+            >
               ¡Espero contar contigo!
             </SectionTitle>
             <p className="rsvp-copy">
-              Confirma cuántas personas asistirán utilizando los lugares
-              asignados a tu familia.
+              {isPersonalInvitation
+                ? "Confirma tu asistencia para este evento."
+                : "Confirma cuántas personas asistirán utilizando los lugares asignados a tu familia."}
             </p>
             <div className="mini-quota">
               <div>
-                <span>Cupo familiar</span>
+                <span>{isPersonalInvitation ? "Cupo" : "Cupo familiar"}</span>
                 <strong>{invitation.maxGuests}</strong>
               </div>
               <div>
@@ -571,9 +590,9 @@ export default function PrivateInvitation() {
                 }}
               />
               <p className="mini-rsvp__hint">
-                Indica el número de asistentes de tu familia. Puedes confirmar
-                una cantidad menor al cupo asignado, pero no exceder el máximo
-                permitido.
+                {isPersonalInvitation
+                  ? "Confirma tu asistencia para reservar tu lugar."
+                  : "Indica el número de asistentes de tu familia. Puedes confirmar una cantidad menor al cupo asignado, pero no exceder el máximo permitido."}
               </p>
               <button
                 className="button button-location rsvp-submit"
@@ -625,13 +644,22 @@ export default function PrivateInvitation() {
             </div>
             <p className="confirmation-alert__eyebrow">Confirmación recibida</p>
             <h2 id="confirmation-alert-title">
-              ¡Gracias, familia {invitation.familyName}!
+              ¡Gracias,{" "}
+              {isPersonalInvitation
+                ? invitation.familyName
+                : `familia ${invitation.familyName}`}
+              !
             </h2>
             <p id="confirmation-alert-message">
               Tu registro de {invitation.confirmedCount} invitados quedó
-              guardado correctamente. Para cualquier aclaración, deben
-              identificarse como{" "}
-              <strong>Familia {invitation.familyName}</strong>.
+              guardado correctamente.
+              {!isPersonalInvitation && (
+                <>
+                  {" "}
+                  Para cualquier aclaración, deben identificarse como{" "}
+                  <strong>Familia {invitation.familyName}</strong>.
+                </>
+              )}
             </p>
             <button
               className="confirmation-alert__button"
