@@ -134,6 +134,7 @@ export async function adminListInvitations() {
       maxGuests: x.maxGuests,
       url: x.url || "",
       confirmedCount: Number(x.confirmedCount || 0),
+      responseSubmitted: x.responseSubmitted === true,
       viewCount: x.viewCount || 0,
       uniqueViewCount: x.uniqueViewCount || 0,
       lastViewedAt: x.lastViewedAt?.toDate?.().toISOString?.() || "",

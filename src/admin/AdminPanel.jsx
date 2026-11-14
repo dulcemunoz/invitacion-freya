@@ -111,9 +111,6 @@ export default function AdminPanel() {
         0,
         item.maxGuests - (item.confirmedCount || 0),
       ),
-      Visitas: item.viewCount || 0,
-      "Visitas únicas aprox.": item.uniqueViewCount || 0,
-      "Última visita": item.lastViewedAt || "",
       Estado: item.active ? "Activa" : "Desactivada",
     }));
 
@@ -175,6 +172,12 @@ export default function AdminPanel() {
     (sum, item) => sum + (item.viewCount || 0),
     0,
   );
+  const ticketsPendingConfirmation = Math.max(0, totalTickets - totalConfirmed);
+  const unusedTickets = invitations.reduce(
+    (sum, item) =>
+      sum + Math.max(0, item.maxGuests - (item.confirmedCount || 0)),
+    0,
+  );
 
   return (
     <main className="admin-shell">
@@ -212,6 +215,14 @@ export default function AdminPanel() {
         <article>
           <span>Visitas</span>
           <strong>{totalViews}</strong>
+        </article>
+        <article>
+          <span>Boletos por confirmar</span>
+          <strong>{ticketsPendingConfirmation}</strong>
+        </article>
+        <article>
+          <span>Boletos no utilizados</span>
+          <strong>{unusedTickets}</strong>
         </article>
       </section>
       <section className="admin-create">
@@ -271,7 +282,6 @@ export default function AdminPanel() {
                 <th>Confirmados</th>
                 <th>Disponibles</th>
                 <th>Visitas</th>
-                <th>Únicas aprox.</th>
                 <th>Enlace</th>
                 <th>Estado</th>
                 <th>Acción</th>
@@ -287,7 +297,6 @@ export default function AdminPanel() {
                     {Math.max(0, item.maxGuests - (item.confirmedCount || 0))}
                   </td>
                   <td>{item.viewCount || 0}</td>
-                  <td>{item.uniqueViewCount || 0}</td>
                   <td className="admin-link-cell">
                     {item.url ? (
                       <>
